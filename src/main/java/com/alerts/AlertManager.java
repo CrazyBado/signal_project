@@ -18,8 +18,15 @@ public class AlertManager {
         }
     }
 
+    public void addListener(AlertListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeListener(AlertListener listener) {
+        listeners.remove(listener);
+    }
+
     public interface AlertListener {
         void onAlert(Alert alert);
-
     }
 }
