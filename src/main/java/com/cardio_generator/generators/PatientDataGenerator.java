@@ -8,7 +8,6 @@ import com.cardio_generator.outputs.OutputStrategy;
  * ID provided and
  * utilize the given output strategy to handle the generated data appropriately.
  */
-
 public interface PatientDataGenerator {
     /**
      * Generates data for a specific patient and sends it to an output strategy.
@@ -17,6 +16,5 @@ public interface PatientDataGenerator {
      * @param outputStrategy the strategy used to handle the output of the generated
      *                       data
      */
-
     void generate(int patientId, OutputStrategy outputStrategy);
 }

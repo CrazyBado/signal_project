@@ -1,14 +1,30 @@
 package com.cardio_generator.generators;
 
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.cardio_generator.outputs.OutputStrategy;
 
+/**
+ * Generates simulated ECG data for patients.
+ * This class simulates ECG waveforms and outputs the data using a specified
+ * output strategy.
+ */
 public class ECGDataGenerator implements PatientDataGenerator {
+
+    private static final Logger LOGGER = Logger.getLogger(ECGDataGenerator.class.getName());
     private static final Random random = new Random();
-    private double[] lastEcgValues;
     private static final double PI = Math.PI;
 
+    private final double[] lastEcgValues;
+
+    /**
+     * Constructs an ECGDataGenerator for a specified number of patients.
+     * Initializes the last ECG value for each patient.
+     *
+     * @param patientCount the number of patients to manage
+     */
     public ECGDataGenerator(int patientCount) {
         lastEcgValues = new double[patientCount + 1];
         // Initialize the last ECG value for each patient
@@ -17,19 +33,33 @@ public class ECGDataGenerator implements PatientDataGenerator {
         }
     }
 
+    /**
+     * Generates and outputs new ECG data for a specified patient.
+     * Simulates the ECG waveform based on patient data and system time.
+     *
+     * @param patientId      the ID of the patient
+     * @param outputStrategy the strategy to output the generated data
+     */
     @Override
     public void generate(int patientId, OutputStrategy outputStrategy) {
-        // TODO Check how realistic this data is and make it more realistic if necessary
         try {
             double ecgValue = simulateEcgWaveform(patientId, lastEcgValues[patientId]);
             outputStrategy.output(patientId, System.currentTimeMillis(), "ECG", Double.toString(ecgValue));
             lastEcgValues[patientId] = ecgValue;
         } catch (Exception e) {
-            System.err.println("An error occurred while generating ECG data for patient " + patientId);
-            e.printStackTrace(); // This will print the stack trace to help identify where the error occurred.
+            LOGGER.log(Level.SEVERE, "An error occurred while generating ECG data for patient " + patientId, e);
         }
     }
 
+    /**
+     * Simulates an ECG waveform for a specified patient.
+     * The simulation uses a combination of sinusoidal waves to represent different
+     * components of the ECG.
+     *
+     * @param patientId    the ID of the patient
+     * @param lastEcgValue the last ECG value generated for the patient
+     * @return the simulated ECG value
+     */
     private double simulateEcgWaveform(int patientId, double lastEcgValue) {
         // Simplified ECG waveform generation based on sinusoids
         double hr = 60.0 + random.nextDouble() * 20.0; // Simulate heart rate variability between 60 and 80 bpm
